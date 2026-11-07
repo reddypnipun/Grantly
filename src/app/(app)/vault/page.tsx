@@ -60,7 +60,10 @@ export default function VaultPage() {
       {tab === "docs" && (
         <div className="space-y-3">
           {documents.length === 0 && (
-            <p className="text-muted-foreground">No documents yet. They appear after onboarding.</p>
+            <div className="text-center py-8 text-muted-foreground">
+              <p>No documents yet.</p>
+              <p className="text-sm mt-1">Complete onboarding to get your document checklist, or add one manually.</p>
+            </div>
           )}
           {documents.map((d) => (
             <div key={d.id} className="rounded-2xl border border-border bg-card p-4 flex flex-col md:flex-row md:items-center gap-3">
@@ -100,6 +103,11 @@ export default function VaultPage() {
               <Button size="sm" onClick={createEssay}><Plus className="h-4 w-4" /></Button>
             </div>
             <div className="space-y-2">
+              {essays.length === 0 && (
+                <div className="rounded-xl border border-dashed border-border p-4 text-center text-sm text-muted-foreground">
+                  No essays yet. Create one to start writing and reusing across applications.
+                </div>
+              )}
               {essays.map((e) => (
                 <button
                   key={e.id}

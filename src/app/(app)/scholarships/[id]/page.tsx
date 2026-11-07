@@ -150,6 +150,18 @@ export default function ScholarshipDetailPage() {
           <Button variant="outline" onClick={() => { const r = sch.opensMonth ?? 6; alert(`Reminder set for ${r} (7 days before estimated reopening).`); }}>Remind me when it reopens</Button>
         )}
       </div>
+      <div className="rounded-2xl border border-border bg-card p-6">
+        <h2 className="font-serif text-xl font-bold mb-4">Application steps</h2>
+        <ol className="space-y-3">
+          {["Check eligibility above", "Gather required documents", "Write your essay(s)", "Get recommendation letters", "Submit before the deadline", "Track in Manage Applications"].map((step, i) => (
+            <li key={step} className="flex items-start gap-3">
+              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground text-sm font-bold">{i + 1}</span>
+              <span className="text-sm pt-1">{step}</span>
+            </li>
+          ))}
+        </ol>
+      </div>
+
       <div className="rounded-2xl border border-success/30 bg-success/5 p-6">
         <div className="flex items-center gap-2 font-semibold text-success"><ShieldCheck className="h-5 w-5" /> Trust & safety</div>
         <p className="text-sm mt-2">Source: <span className="font-medium">{sch.source === "sample" ? "Sample data for demonstration" : "Verified"}</span></p>
