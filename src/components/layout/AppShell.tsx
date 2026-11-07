@@ -1,8 +1,8 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Search, Kanban, Calendar, FolderOpen, Sparkles, Target, Bell } from "lucide-react";
+import { Home, Search, Kanban, Calendar, FolderOpen, Sparkles, Target, Bell, Moon, Sun } from "lucide-react";
 import { scholarships } from "@/data/scholarships.seed";
 import { useProfileStore } from "@/stores/profileStore";
 import { useApplicationStore } from "@/stores/applicationStore";
@@ -25,6 +25,19 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const applications = useApplicationStore((s) => s.applications);
   const [notifOpen, setNotifOpen] = useState(false);
   const [now] = useState(() => Date.now());
+  const [dark, setDark] = useState(false);
+  useEffect(() => {
+    const saved = typeof window !== "undefined" ? localStorage.getItem("grantly:theme") : null;
+    const isDark = saved === "dark" || (!saved && window.matchMedia("(prefers-color-scheme: dark)").matches);
+    setDark(isDark);
+    document.documentElement.classList.toggle("dark", isDark);
+  }, []);
+  function toggleTheme() {
+    const next = !dark;
+    setDark(next);
+    document.documentElement.classList.toggle("dark", next);
+    localStorage.setItem("grantly:theme", next ? "dark" : "light");
+  }
 
   const relevantIds = applications.length
     ? applications.map((a) => a.scholarshipId)
@@ -47,7 +60,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <aside className="hidden md:flex md:w-60 md:flex-col md:fixed md:inset-y-0 border-r border-border bg-card">
         <div className="h-16 flex items-center justify-between px-6 border-b border-border">
           <Link href="/dashboard" className="font-serif text-2xl font-bold text-primary">Grantly</Link>
-          <div className="relative">
+          <div className="relative flex items-center gap-1">
+            <button onClick={toggleTheme} className="p-2 rounded-lg hover:bg-muted" aria-label="Toggle theme">
+              {dark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+            </button>
             <button onClick={() => setNotifOpen(!notifOpen)} className="relative p-2 rounded-lg hover:bg-muted">
               <Bell className="h-5 w-5" />
               {notifs.length > 0 && <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-danger" />}
@@ -88,8 +104,14 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             );
           })}
         </nav>
-        <div className="p-3 border-t border-border text-xs text-muted-foreground">
-          Sample data for demonstration
+        <div className="p-3 border-t border-border text-xs text-muted-foreground space-y-2">
+          <div>Sample data for demonstration</div>
+          <button
+            onClick={() => { localStorage.clear(); window.location.href = "/onboarding?sample=1"; }}
+            className="text-primary underline"
+          >
+            Reset demo
+          </button>
         </div>
       </aside>
 
