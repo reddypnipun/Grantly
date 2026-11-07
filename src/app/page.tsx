@@ -39,6 +39,9 @@ export default function LandingPage() {
                   Try with a sample student
                 </Button>
               </Link>
+              <Link href="/discover?guest=1" className="text-sm text-primary underline">
+                Explore as guest (no account)
+              </Link>
               <Link href="/about" className="text-sm text-primary underline">
                 See how we solve the brief →
               </Link>

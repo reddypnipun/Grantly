@@ -8,6 +8,7 @@ import { useProfileStore } from "@/stores/profileStore";
 import { useApplicationStore, createApplication } from "@/stores/applicationStore";
 import { matchScholarship } from "@/lib/matching";
 import { Button } from "@/components/ui/button";
+import { Tooltip } from "@/components/ui/tooltip";
 import { getMissingFields, getDisplayDeadline } from "@/lib/scholarship";
 
 export default function ScholarshipDetailPage() {
@@ -77,7 +78,7 @@ export default function ScholarshipDetailPage() {
       {/* Eligibility breakdown */}
       {match && (
         <div className="rounded-2xl border border-border bg-card p-6 space-y-4">
-          <h2 className="font-serif text-xl font-bold">Eligibility Matcher</h2>
+          <h2 className="font-serif text-xl font-bold">Eligibility Matcher <Tooltip text="FAFSA = Free Application for Federal Student Aid (US). EWS = Economically Weaker Section (India). OBC = Other Backward Classes. SC/ST = Scheduled Castes/Tribes.">?</Tooltip></h2>
           {match.whyMatch.length > 0 && (
             <div>
               <h3 className="text-sm font-semibold text-success mb-2">Why you qualify</h3>

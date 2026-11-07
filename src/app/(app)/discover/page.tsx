@@ -3,7 +3,8 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Search, SlidersHorizontal, Bookmark, GitCompare, X, ChevronDown } from "lucide-react";
-import { useProfileStore } from "@/stores/profileStore";
+import { useSearchParams } from "next/navigation";
+import { useProfileStore, createEmptyProfile } from "@/stores/profileStore";
 import { useApplicationStore, createApplication } from "@/stores/applicationStore";
 import { scholarships } from "@/data/scholarships.seed";
 import { matchAll } from "@/lib/matching";
@@ -44,6 +45,14 @@ export default function DiscoverPage() {
   const applications = useApplicationStore((s) => s.applications);
   const addApp = useApplicationStore((s) => s.addApplication);
   const removeApp = useApplicationStore((s) => s.removeApplication);
+
+  const searchParams = useSearchParams();
+  useEffect(() => {
+    if (searchParams.get("guest") === "1" && !useProfileStore.getState().profile) {
+      const p = createEmptyProfile({ name: "Guest Student", educationLevel: "undergrad", field: "computer science", country: "IN", gpa: 3.4, gpaScale: "4", needLevel: "medium", background: [], interests: [], goals: "" });
+      useProfileStore.getState().setProfile(p);
+    }
+  }, [searchParams]);
 
   const [query, setQuery] = useState("");
   const [showFilters, setShowFilters] = useState(false);
