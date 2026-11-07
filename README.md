@@ -69,6 +69,9 @@ All scholarship records are sample data for demonstration only. They are not ver
 ## AI assistance disclosure
 Built with AI assistance (code generation) as permitted by the event.
 
+## Accessibility
+- High-contrast mode toggle, skip-to-content link, keyboard-navigable Kanban, ARIA labels, focus rings, prefers-reduced-motion respected, simplify-text toggle on detail pages.
+
 ## Roadmap
 - Real backend integration via storage abstraction
 - LLM-enhanced outline generator (optional env key)
