@@ -87,6 +87,21 @@ h1, h2, h3, h4 {
 }
 .skip-link:focus { left: 0; }
 
+.high-contrast {
+  --background: #FFFFFF;
+  --foreground: #000000;
+  --card: #FFFFFF;
+  --card-foreground: #000000;
+  --muted: #F2F2F2;
+  --muted-foreground: #000000;
+  --primary: #0000CC;
+  --primary-foreground: #FFFFFF;
+  --accent: #006600;
+  --border: #000000;
+  --ring: #0000CC;
+}
+.high-contrast * { border-color: #000 !important; }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;

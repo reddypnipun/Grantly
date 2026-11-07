@@ -1,5 +1,6 @@
 "use client";
 import { useParams, useRouter } from "next/navigation";
+import { useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, CheckCircle2, ShieldCheck, ExternalLink } from "lucide-react";
 import { scholarships } from "@/data/scholarships.seed";
@@ -17,6 +18,7 @@ export default function ScholarshipDetailPage() {
   const apps = useApplicationStore((s) => s.applications);
   const addApp = useApplicationStore((s) => s.addApplication);
   const sch = scholarships.find((s) => s.id === id);
+  const [simplify, setSimplify] = useState(false);
 
   if (!sch) {
     return <div className="p-8">Scholarship not found. <Link href="/discover" className="text-primary underline">Back to discover</Link></div>;
@@ -61,7 +63,10 @@ export default function ScholarshipDetailPage() {
             </div>
           )}
         </div>
-        <p className="mt-4 text-foreground/90">{sch.description}</p>
+        <p className="mt-4 text-foreground/90">{simplify ? `This scholarship is from ${sch.provider}. Amount: ${sch.amount != null ? sch.amount.toLocaleString() + " " + sch.currency : "not confirmed"}. Deadline: ${sch.deadline ?? sch.lastKnownDeadline ?? "not confirmed"}.` : sch.description}</p>
+        <div className="mt-2">
+          <button onClick={() => setSimplify(!simplify)} className="text-xs text-primary underline" aria-pressed={simplify}>Simplify text</button>
+        </div>
         <div className="mt-6">
           <Button size="lg" onClick={startApplication} className="rounded-full">
             {existingApp ? "View in tracker" : "Start application"} <ArrowRightIcon />

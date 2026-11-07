@@ -26,6 +26,17 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const [notifOpen, setNotifOpen] = useState(false);
   const [now] = useState(() => Date.now());
   const [dark, setDark] = useState(false);
+  const [highContrast, setHighContrast] = useState(false);
+  useEffect(() => {
+    const saved = localStorage.getItem("grantly:hc");
+    if (saved === "1") { setHighContrast(true); document.documentElement.classList.add("high-contrast"); }
+  }, []);
+  function toggleHC() {
+    const next = !highContrast;
+    setHighContrast(next);
+    document.documentElement.classList.toggle("high-contrast", next);
+    localStorage.setItem("grantly:hc", next ? "1" : "0");
+  }
   useEffect(() => {
     const saved = typeof window !== "undefined" ? localStorage.getItem("grantly:theme") : null;
     const isDark = saved === "dark" || (!saved && window.matchMedia("(prefers-color-scheme: dark)").matches);
@@ -63,6 +74,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <div className="relative flex items-center gap-1">
             <button onClick={toggleTheme} className="p-2 rounded-lg hover:bg-muted" aria-label="Toggle theme">
               {dark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+            </button>
+            <button onClick={toggleHC} className="p-2 rounded-lg hover:bg-muted text-xs font-bold" aria-label="Toggle high contrast" aria-pressed={highContrast}>
+              HC
             </button>
             <button onClick={() => setNotifOpen(!notifOpen)} className="relative p-2 rounded-lg hover:bg-muted" aria-label="Notifications">
               <Bell className="h-5 w-5" />
