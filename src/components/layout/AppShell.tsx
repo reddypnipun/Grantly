@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Search, Kanban, Calendar, FolderOpen, Sparkles, Target, Bell, Moon, Sun } from "lucide-react";
+import { Home, Search, Kanban, Calendar, FolderOpen, Sparkles, Target, Bell, Moon, Sun, CheckCircle2 } from "lucide-react";
 import { scholarships } from "@/data/scholarships.seed";
 import { useProfileStore } from "@/stores/profileStore";
 import { useApplicationStore } from "@/stores/applicationStore";
@@ -16,7 +16,7 @@ const navItems = [
   { href: "/calendar", label: "Calendar", icon: Calendar },
   { href: "/vault", label: "Document Vault", icon: FolderOpen },
   { href: "/what-if", label: "What-If Simulator", icon: Sparkles },
-  { href: "/goals", label: "Funding Goals", icon: Target },
+  { href: "/about", label: "Problem Alignment", icon: CheckCircle2 },
 ];
 
 export function AppShell({ children }: { children: React.ReactNode }) {
