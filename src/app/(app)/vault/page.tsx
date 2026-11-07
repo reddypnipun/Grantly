@@ -135,7 +135,7 @@ export default function VaultPage() {
                       <Wand2 className="mr-1 h-4 w-4" /> Outline
                     </Button>
                     <Button size="sm" onClick={saveEssay}>Save</Button>
-                    <Button variant="destructive" size="sm" onClick={() => { deleteEssay(editingId!); setEditingId(null); }}>
+                    <Button variant="destructive" size="sm" onClick={() => { deleteEssay(editingId!); setEditingId(null); }} aria-label="Delete essay">
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>

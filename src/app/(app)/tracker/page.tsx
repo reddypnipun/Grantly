@@ -49,7 +49,7 @@ function Card({ app, view }: { app: Application; view: "kanban" | "list" }) {
       <div className="flex items-start justify-between gap-2">
         <Link href={`/scholarships/${sch?.id}`} className="font-medium text-sm hover:text-primary">{sch?.title}</Link>
         <div className="relative">
-          <button onClick={(e) => { e.stopPropagation(); setMenuOpen(!menuOpen); }} className="text-muted-foreground"><MoreHorizontal className="h-4 w-4" /></button>
+          <button onClick={(e) => { e.stopPropagation(); setMenuOpen(!menuOpen); }} className="text-muted-foreground" aria-label="Move card"><MoreHorizontal className="h-4 w-4" /></button>
           {menuOpen && (
             <div className="absolute right-0 mt-1 z-20 rounded-lg border border-border bg-card shadow-md p-1 min-w-[140px]">
               {COLUMNS.map((c) => (

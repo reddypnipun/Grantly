@@ -251,7 +251,7 @@ export default function DiscoverPage() {
                   <Button size="sm" variant={saved ? "secondary" : "default"} onClick={() => toggleSave(m.id)} className="flex-1">
                     <Bookmark className="mr-1 h-4 w-4" /> {saved ? "Saved" : "Save"}
                   </Button>
-                  <Button size="sm" variant={comparing ? "secondary" : "outline"} onClick={() => toggleCompare(m.id)}>
+                  <Button size="sm" variant={comparing ? "secondary" : "outline"} onClick={() => toggleCompare(m.id)} aria-label="Compare">
                     <GitCompare className="h-4 w-4" />
                   </Button>
                   <Link href={`/scholarships/${m.id}`}><Button size="sm" variant="ghost">View</Button></Link>

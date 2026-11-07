@@ -66,9 +66,9 @@ export default function CalendarPage() {
       {view === "month" ? (
         <div className="rounded-2xl border border-border bg-card p-4">
           <div className="flex items-center justify-between mb-4">
-            <button onClick={() => setCursor(new Date(year, month - 1, 1))} className="p-2 hover:bg-muted rounded"><ChevronLeft className="h-5 w-5" /></button>
+            <button onClick={() => setCursor(new Date(year, month - 1, 1))} className="p-2 hover:bg-muted rounded" aria-label="Previous month"><ChevronLeft className="h-5 w-5" /></button>
             <h2 className="font-serif text-xl font-bold">{cursor.toLocaleString("default", { month: "long", year: "numeric" })}</h2>
-            <button onClick={() => setCursor(new Date(year, month + 1, 1))} className="p-2 hover:bg-muted rounded"><ChevronRight className="h-5 w-5" /></button>
+            <button onClick={() => setCursor(new Date(year, month + 1, 1))} className="p-2 hover:bg-muted rounded" aria-label="Next month"><ChevronRight className="h-5 w-5" /></button>
           </div>
           <div className="grid grid-cols-7 gap-1 text-center text-xs font-medium text-muted-foreground mb-2">
             {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((d) => <div key={d}>{d}</div>)}
