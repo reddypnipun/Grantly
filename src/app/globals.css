@@ -1,0 +1,96 @@
+@import "tailwindcss";
+
+:root {
+  --background: #FBF7F2;
+  --foreground: #292524;
+  --card: #FFFFFF;
+  --card-foreground: #292524;
+  --muted: #F5F0E8;
+  --muted-foreground: #78716C;
+  --primary: #F97316;
+  --primary-foreground: #FFFFFF;
+  --accent: #0D9488;
+  --accent-foreground: #FFFFFF;
+  --success: #16A34A;
+  --warning: #D97706;
+  --danger: #DC2626;
+  --border: #E7E5E4;
+  --ring: #F97316;
+  --radius: 0.625rem;
+}
+
+.dark {
+  --background: #1C1917;
+  --foreground: #FAFAF9;
+  --card: #292524;
+  --card-foreground: #FAFAF9;
+  --muted: #292524;
+  --muted-foreground: #A8A29E;
+  --primary: #FB923C;
+  --primary-foreground: #1C1917;
+  --accent: #2DD4BF;
+  --accent-foreground: #1C1917;
+  --success: #4ADE80;
+  --warning: #FBBF24;
+  --danger: #F87171;
+  --border: #44403C;
+  --ring: #FB923C;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+  --font-sans: var(--font-manrope);
+  --font-serif: var(--font-fraunces);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-full: 9999px;
+}
+
+* { border-color: var(--border); }
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-manrope), system-ui, sans-serif;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-fraunces), Georgia, serif;
+  letter-spacing: -0.01em;
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  padding: 0.5rem 1rem;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  border-radius: 0 0 0.5rem 0;
+}
+.skip-link:focus { left: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
