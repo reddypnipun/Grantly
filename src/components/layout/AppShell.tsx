@@ -11,12 +11,12 @@ import { cn } from "@/lib/utils";
 
 const navItems = [
   { href: "/dashboard", label: "Home", icon: Home },
-  { href: "/discover", label: "Discover", icon: Search },
-  { href: "/tracker", label: "Tracker", icon: Kanban },
+  { href: "/discover", label: "Discover Opportunities", icon: Search },
+  { href: "/tracker", label: "Manage Applications", icon: Kanban },
   { href: "/calendar", label: "Calendar", icon: Calendar },
-  { href: "/vault", label: "Vault", icon: FolderOpen },
-  { href: "/what-if", label: "What if", icon: Sparkles },
-  { href: "/goals", label: "Goals", icon: Target },
+  { href: "/vault", label: "Document Vault", icon: FolderOpen },
+  { href: "/what-if", label: "What-If Simulator", icon: Sparkles },
+  { href: "/goals", label: "Funding Goals", icon: Target },
 ];
 
 export function AppShell({ children }: { children: React.ReactNode }) {
@@ -64,7 +64,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <button onClick={toggleTheme} className="p-2 rounded-lg hover:bg-muted" aria-label="Toggle theme">
               {dark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
             </button>
-            <button onClick={() => setNotifOpen(!notifOpen)} className="relative p-2 rounded-lg hover:bg-muted">
+            <button onClick={() => setNotifOpen(!notifOpen)} className="relative p-2 rounded-lg hover:bg-muted" aria-label="Notifications">
               <Bell className="h-5 w-5" />
               {notifs.length > 0 && <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-danger" />}
             </button>
@@ -120,7 +120,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <header className="md:hidden h-14 flex items-center justify-between px-4 border-b border-border bg-card sticky top-0 z-30">
           <Link href="/dashboard" className="font-serif text-xl font-bold text-primary">Grantly</Link>
           <div className="flex items-center gap-2">
-            <button onClick={() => setNotifOpen(!notifOpen)} className="relative p-2">
+            <button onClick={() => setNotifOpen(!notifOpen)} className="relative p-2" aria-label="Notifications">
               <Bell className="h-5 w-5" />
               {notifs.length > 0 && <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-danger" />}
             </button>

@@ -72,10 +72,10 @@ export default function ScholarshipDetailPage() {
       {/* Eligibility breakdown */}
       {match && (
         <div className="rounded-2xl border border-border bg-card p-6 space-y-4">
-          <h2 className="font-serif text-xl font-bold">Eligibility breakdown</h2>
+          <h2 className="font-serif text-xl font-bold">Eligibility Matcher</h2>
           {match.whyMatch.length > 0 && (
             <div>
-              <h3 className="text-sm font-semibold text-success mb-2">Why you match</h3>
+              <h3 className="text-sm font-semibold text-success mb-2">Why you qualify</h3>
               <ul className="space-y-1">
                 {match.whyMatch.map((w, i) => (
                   <li key={i} className="flex items-start gap-2 text-sm"><CheckCircle2 className="h-4 w-4 text-success mt-0.5" /> {w}</li>
@@ -83,21 +83,11 @@ export default function ScholarshipDetailPage() {
               </ul>
             </div>
           )}
-          {match.needsAttention.length > 0 && (
+          {(match.needsAttention.length > 0 || match.notEligible.length > 0) && (
             <div>
-              <h3 className="text-sm font-semibold text-warning mb-2">Needs attention</h3>
+              <h3 className="text-sm font-semibold text-danger mb-2">What's missing</h3>
               <ul className="space-y-1">
-                {match.needsAttention.map((w, i) => (
-                  <li key={i} className="flex items-start gap-2 text-sm text-warning">⚠ {w}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-          {match.notEligible.length > 0 && (
-            <div>
-              <h3 className="text-sm font-semibold text-danger mb-2">Not eligible because</h3>
-              <ul className="space-y-1">
-                {match.notEligible.map((w, i) => (
+                {[...match.needsAttention, ...match.notEligible].map((w, i) => (
                   <li key={i} className="flex items-start gap-2 text-sm text-danger">✕ {w}</li>
                 ))}
               </ul>

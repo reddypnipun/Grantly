@@ -13,6 +13,8 @@ export default function DashboardPage() {
   const profile = useProfileStore((s) => s.profile);
   const applications = useApplicationStore((s) => s.applications);
   const [mounted, setMounted] = useState(false);
+  const [showWelcome, setShowWelcome] = useState(true);
+  useEffect(() => setMounted(true), []);
   useEffect(() => setMounted(true), []);
 
   const matches = useMemo(() => (profile ? matchAll(profile, scholarships) : []), [profile]);
@@ -86,7 +88,16 @@ export default function DashboardPage() {
 
   return (
     <div className="p-4 md:p-8 max-w-6xl mx-auto space-y-6">
-      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+      {showWelcome && (
+        <div className="rounded-2xl border-2 border-primary bg-primary/5 p-4 flex items-start justify-between gap-3">
+          <div>
+            <div className="font-semibold text-primary">Welcome to your seamless digital journey for discovering and managing educational financial assistance.</div>
+            <p className="text-sm text-muted-foreground mt-1">Grantly turns a scattered, confusing scholarship hunt into one personalized feed — with plain-language eligibility, deadlines, checklists, and your next best action.</p>
+          </div>
+          <button onClick={() => setShowWelcome(false)} className="text-muted-foreground text-sm">Dismiss</button>
+        </div>
+      )}
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
         <h1 className="font-serif text-3xl md:text-4xl font-bold">Hi {profile.name} 👋</h1>
         <p className="text-muted-foreground mt-1">Here's your scholarship snapshot.</p>
       </motion.div>

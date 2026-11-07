@@ -8,7 +8,15 @@ Accessing educational financial assistance is a complicated journey: finding opp
 ## Solution
 Grantly is a frontend-only scholarship co-pilot covering DISCOVER → UNDERSTAND → DECIDE → APPLY → TRACK → WIN.
 
-## Pain-point mapping
+## PROBLEM STATEMENT ALIGNMENT
+
+| Brief pain point | Grantly feature |
+|---|---|
+| Discovery is scattered and noisy | One personalized, ranked feed (Discover Opportunities) |
+| Eligibility is confusing | Eligibility Matcher: "Why you qualify" / "What's missing" on every scholarship |
+| Deadlines and requirements easy to miss | Unified calendar, reminders, per-scholarship checklists (Manage Applications) |
+| Applications are repetitive | Reusable document & essay vault (Document Vault) |
+| Nothing shows progress or next steps | Dashboard with one clear "Next best action" |
 1. Discovery scattered/noisy → one personalized, ranked feed (Discover).
 2. Eligibility confusing → plain-language Why you match / Needs attention / Not eligible (Detail).
 3. Deadlines missed → unified calendar, reminders, per-scholarship checklists (Tracker, Calendar).
