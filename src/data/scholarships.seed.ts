@@ -1,4 +1,4 @@
-import type { Scholarship } from "@/types";
+import type { Scholarship, ScholarshipStatus, Confidence } from "@/types";
 
 const now = new Date();
 function iso(days: number): string {
@@ -50,9 +50,39 @@ const seeds: Seed[] = [
   { title: "Graduate Fellowship (STEM)", provider: "GradSTEM (sample)", country: "US", level: ["postgrad"], fields: ["engineering", "computer science", "mathematics", "physics"], minGpa: 3.5, needBased: false, meritBased: true, type: "merit", amount: 9000, currency: "USD", effort: { essays: 2, recommendations: 3, hours: 8 }, requirements: ["Transcript", "research statement", "3 refs"], documents: ["transcript", "essay", "recommendation", "resume"], description: "Graduate STEM fellowship.", tips: ["Research focus.", "Strong refs."], source: "sample", officialUrl: "https://example.com/grad-stem", tags: ["graduate", "stem"], demographics: [], deadlineOffsetDays: 68 },
 ];
 
-export const scholarships: Scholarship[] = seeds.map((s, i) => ({
-  ...s,
-  id: `sch_${i + 1}`,
-  deadline: iso(s.deadlineOffsetDays),
-  createdAt: now.toISOString(),
-}));
+import { realScholarships } from "@/data/real-scholarships";
+
+export const scholarships: Scholarship[] = [
+  ...seeds.map((s, i) => ({
+    ...s,
+    id: `sch_${i + 1}`,
+    title: s.title,
+    name: s.title,
+    country: s.country,
+    status: "OPEN" as ScholarshipStatus,
+    amount: s.amount,
+    amountText: `${s.amount} ${s.currency}`,
+    amountValue: s.amount,
+    amountCurrency: s.currency,
+    awardsCount: null,
+    eligibility: null,
+    requiredDocuments: s.documents,
+    essaysRequired: s.effort.essays,
+    recommendationsRequired: s.effort.recommendations,
+    applicationFee: "none",
+    lastKnownDeadline: iso(s.deadlineOffsetDays),
+    deadline: iso(s.deadlineOffsetDays),
+    opensMonth: null,
+    closesMonth: null,
+    officialUrl: s.officialUrl,
+    officialLink: s.officialUrl ?? "",
+    sourceUrls: s.officialUrl ? [s.officialUrl] : [],
+    confidence: "MEDIUM" as Confidence,
+    hasConflict: false,
+    isReal: false,
+    notes: null,
+    tags: s.tags,
+    createdAt: now.toISOString(),
+  })),
+  ...realScholarships,
+];

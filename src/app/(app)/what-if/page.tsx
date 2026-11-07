@@ -33,7 +33,7 @@ export default function WhatIfPage() {
 
   const matches = useMemo(() => matchAll(simProfile, scholarships), [simProfile]);
   const qualified = matches.filter((m) => m.match.score >= 50);
-  const total = qualified.reduce((s, m) => s + m.amount, 0);
+  const total = qualified.reduce((s, m) => s + (m.amount ?? 0), 0);
 
   return (
     <div className="p-4 md:p-8 max-w-6xl mx-auto space-y-6">

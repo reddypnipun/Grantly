@@ -23,9 +23,8 @@ export default function CalendarPage() {
     : matches.slice(0, 8).map((m) => m.id);
   const events = relevantIds
     .map((id) => scholarships.find((s) => s.id === id))
-    .filter(Boolean)
-    .map((s) => s!)
-    .sort((a, b) => new Date(a.deadline).getTime() - new Date(b.deadline).getTime());
+    .filter((s): s is NonNullable<typeof s> => !!s && !!(s.deadline || s.lastKnownDeadline))
+    .sort((a, b) => new Date(a.lastKnownDeadline ?? a.deadline!).getTime() - new Date(b.lastKnownDeadline ?? b.deadline!).getTime());
 
   function urgency(iso: string) {
     const days = Math.ceil((new Date(iso).getTime() - Date.now()) / 86400000);
@@ -45,7 +44,8 @@ export default function CalendarPage() {
 
   const eventsByDay = new Map<number, typeof events>();
   events.forEach((e) => {
-    const dt = new Date(e.deadline);
+    const ref = (e.deadline ?? e.lastKnownDeadline)!;
+    const dt = new Date(ref);
     if (dt.getFullYear() === year && dt.getMonth() === month) {
       const day = dt.getDate();
       if (!eventsByDay.has(day)) eventsByDay.set(day, []);
@@ -81,7 +81,7 @@ export default function CalendarPage() {
                     <div className="text-xs font-medium">{day}</div>
                     <div className="space-y-1 mt-1">
                       {(eventsByDay.get(day) || []).map((e) => (
-                        <div key={e.id} className={`text-[10px] rounded px-1 py-0.5 truncate ${urgency(e.deadline)}`} title={e.title}>
+                        <div key={e.id} className={`text-[10px] rounded px-1 py-0.5 truncate ${urgency((e.deadline ?? e.lastKnownDeadline)!)}`} title={e.title}>
                           {e.title}
                         </div>
                       ))}
@@ -98,11 +98,11 @@ export default function CalendarPage() {
             <div key={e.id} className="rounded-2xl border border-border bg-card p-4 flex items-center justify-between gap-3">
               <div>
                 <div className="font-medium">{e.title}</div>
-                <div className="text-sm text-muted-foreground">{e.provider} • {e.deadline}</div>
+                <div className="text-sm text-muted-foreground">{e.provider} • {e.deadline ?? e.lastKnownDeadline}</div>
               </div>
               <div className="flex items-center gap-2">
-                <span className={`text-xs rounded-full px-2 py-1 ${urgency(e.deadline)}`}>{Math.ceil((new Date(e.deadline).getTime() - Date.now()) / 86400000)}d</span>
-                <Button size="sm" variant="outline" onClick={() => downloadIcs(e.title, e.deadline, e.description)}>
+                <span className={`text-xs rounded-full px-2 py-1 ${urgency((e.deadline ?? e.lastKnownDeadline)!)}`}>{Math.ceil((new Date((e.deadline ?? e.lastKnownDeadline)!).getTime() - Date.now()) / 86400000)}d</span>
+                <Button size="sm" variant="outline" onClick={() => downloadIcs(e.title, (e.deadline ?? e.lastKnownDeadline)!, e.description)}>
                   <Download className="h-4 w-4" />
                 </Button>
               </div>

@@ -55,6 +55,8 @@ export default function DiscoverPage() {
   const [type, setType] = useState("");
   const [effortMax, setEffortMax] = useState<number | "">("");
   const [sort, setSort] = useState("match");
+  const [statusFilter, setStatusFilter] = useState("");
+  const [showClosed, setShowClosed] = useState(false);
   const [compare, setCompare] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [nlFilters, setNlFilters] = useState<Record<string, unknown>>({});
@@ -83,9 +85,11 @@ export default function DiscoverPage() {
     const typ = type || (nlFilters.type as string | undefined);
 
     list = list.filter((m) => {
-      if (am && m.amount > am) return false;
+      if (am && (m.amount == null || m.amount > am)) return false;
       if (dd) {
-        const days = (new Date(m.deadline).getTime() - Date.now()) / 86400000;
+        const ref = m.deadline ?? m.lastKnownDeadline;
+        if (!ref) return false; // exclude null deadlines when filter active? spec: exclude only null when filter active for amount; for deadline same treatment. Let me exclude null deadlines when deadline filter active.
+        const days = (new Date(ref).getTime() - Date.now()) / 86400000;
         if (days > dd) return false;
       }
       if (lvl && !m.level.includes(lvl as never)) return false;
@@ -95,11 +99,14 @@ export default function DiscoverPage() {
       if (typ === "merit" && !m.meritBased) return false;
       if (ef && m.effort.hours > ef) return false;
       if (nlFilters.demographic === "women" && !m.demographics.includes("women")) return false;
+      const isOpen = m.status === "OPEN" || m.status === "OPENING_SOON" || m.status === "ROLLING";
+      if (!showClosed && !isOpen) return false;
+      if (statusFilter && m.status !== statusFilter) return false;
       return true;
     });
 
-    if (sort === "closing") list.sort((a, b) => new Date(a.deadline).getTime() - new Date(b.deadline).getTime());
-    else if (sort === "amount") list.sort((a, b) => b.amount - a.amount);
+    if (sort === "closing") list.sort((a, b) => new Date(a.deadline ?? a.lastKnownDeadline ?? 0).getTime() - new Date(b.deadline ?? b.lastKnownDeadline ?? 0).getTime());
+    else if (sort === "amount") list.sort((a, b) => (b.amount ?? -1) - (a.amount ?? -1));
     else if (sort === "effort") list.sort((a, b) => a.effort.hours - b.effort.hours);
     else list.sort((a, b) => (b.match?.score ?? 0) - (a.match?.score ?? 0));
 
@@ -184,9 +191,22 @@ export default function DiscoverPage() {
             <option value="5">Under 5 hours</option>
             <option value="10">Under 10 hours</option>
           </select>
-          <Button variant="ghost" onClick={() => { setAmountMax(""); setDeadlineDays(""); setLevel(""); setField(""); setLocation(""); setType(""); setEffortMax(""); setQuery(""); }}>Clear</Button>
+          <select className="rounded-lg border border-border bg-background px-3 py-2 text-sm" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
+            <option value="">Any status</option>
+            <option value="OPEN">Open</option>
+            <option value="OPENING_SOON">Opening soon</option>
+            <option value="ROLLING">Rolling</option>
+            <option value="CLOSED_REOPENS">Closed (reopens)</option>
+            <option value="CLOSED_DISCONTINUED">Discontinued</option>
+          </select>
+          <label className="flex items-center gap-2 text-sm">
+            <input type="checkbox" checked={showClosed} onChange={(e) => setShowClosed(e.target.checked)} />
+            Show closed
+          </label>
         </div>
       )}
+
+      <div className="text-sm text-muted-foreground">{filtered.length} results • {scholarships.filter((s) => s.status === "OPEN").length} open, {scholarships.filter((s) => s.status === "CLOSED_REOPENS" || s.status === "CLOSED_DISCONTINUED").length} closed</div>
 
       {loading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -221,9 +241,10 @@ export default function DiscoverPage() {
                   </div>
                 </div>
                 <div className="mt-3 flex flex-wrap gap-2 text-xs">
-                  <span className="rounded-full bg-muted px-2 py-1">{m.amount.toLocaleString()} {m.currency}</span>
+                  <span className="rounded-full bg-muted px-2 py-1">{m.amount != null ? `${m.amount.toLocaleString()} ${m.currency}` : "Amount unconfirmed"}</span>
                   <span className="rounded-full bg-muted px-2 py-1">{m.effort.hours}h effort</span>
                   <span className="rounded-full bg-muted px-2 py-1">{m.country}</span>
+                  <span className={`rounded-full px-2 py-1 ${m.status === "OPEN" ? "bg-success/10 text-success" : m.status === "ROLLING" ? "bg-accent/10 text-accent" : m.status === "OPENING_SOON" ? "bg-warning/10 text-warning" : "bg-muted text-muted-foreground"}`}>{(m.status ?? "OPEN").replace(/_/g, " ")}</span>
                 </div>
                 <p className="mt-3 text-sm text-muted-foreground line-clamp-2">{m.description}</p>
                 <div className="mt-auto pt-4 flex items-center gap-2">

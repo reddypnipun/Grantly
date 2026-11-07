@@ -1,4 +1,7 @@
-export type EducationLevel = "high_school" | "undergrad" | "postgrad" | "phd" | "other";
+export type ScholarshipStatus = "OPEN" | "OPENING_SOON" | "CLOSED_REOPENS" | "CLOSED_DISCONTINUED" | "ROLLING";
+export type Confidence = "HIGH" | "MEDIUM" | "LOW";
+
+export type EducationLevel = "high_school" | "undergrad" | "postgrad" | "phd" | "other" | "school";
 
 export type NeedLevel = "high" | "medium" | "low" | "none";
 
@@ -46,25 +49,55 @@ export interface Scholarship {
   id: string;
   title: string;
   provider: string;
-  country: Country;
+  country: string;
+  applicantCountry?: string | null;
+  studyCountry?: string | null;
+  status?: ScholarshipStatus;
+  type: string;
   level: EducationLevel[];
-  fields: string[]; // "any" allowed
-  minGpa?: number; // 0-4 scale
+  levels?: string[] | null;
+  fields: string[];
+  minGpa?: number | null;
   needBased: boolean;
   meritBased: boolean;
-  type: ScholarshipType;
-  amount: number; // USD
+  amount: number | null;
+  amountText?: string | null;
+  amountValue?: number | null;
+  amountCurrency?: string | null;
   currency: string;
-  deadline: string; // ISO date
-  effort: { essays: number; recommendations: number; hours: number };
-  requirements: string[];
+  awardsCount?: number | null;
+  eligibility?: {
+    citizenship?: string | null;
+    maxFamilyIncomeINR?: number | null;
+    minGpaPercent?: number | null;
+    gender?: string | null;
+    category?: string | null;
+    minWorkYears?: number | null;
+    notes?: string | null;
+  } | null;
+  requiredDocuments?: string[] | null;
   documents: string[];
+  essaysRequired?: number | null;
+  recommendationsRequired?: number | null;
+  applicationFee?: string | null;
+  lastKnownDeadline?: string | null;
+  deadline: string | null;
+  opensMonth?: number | null;
+  closesMonth?: number | null;
+  officialUrl?: string | null;
+  officialLink?: string;
+  sourceUrls?: string[];
+  confidence?: Confidence;
+  hasConflict?: boolean;
+  isReal?: boolean;
   description: string;
   tips: string[];
-  source: "verified" | "sample";
-  officialUrl: string;
   tags: string[];
-  demographics: string[]; // e.g. "women", "first-gen"
+  demographics: string[];
+  notes?: string | null;
+  effort: { essays: number; recommendations: number; hours: number };
+  requirements: string[];
+  source: "verified" | "sample";
   createdAt: string;
 }
 

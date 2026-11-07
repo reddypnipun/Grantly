@@ -39,7 +39,7 @@ function Card({ app, view }: { app: Application; view: "kanban" | "list" }) {
         <td className="p-3 text-sm">{sch?.provider}</td>
         <td className="p-3 text-sm">{app.status}</td>
         <td className="p-3 text-sm">{total ? `${done}/${total}` : "—"}</td>
-        <td className="p-3 text-sm">{sch ? daysUntil(sch.deadline) : "—"}d</td>
+        <td className="p-3 text-sm">{sch ? (sch.deadline ? daysUntil(sch.deadline) : "—") : "—"}d</td>
       </tr>
     );
   }
@@ -70,7 +70,7 @@ function Card({ app, view }: { app: Application; view: "kanban" | "list" }) {
           <div className="text-xs text-muted-foreground mt-1">{done}/{total} tasks</div>
         </div>
       )}
-      <div className="mt-2 text-xs text-warning font-medium">{sch ? `${daysUntil(sch.deadline)} days left` : ""}</div>
+      <div className="mt-2 text-xs text-warning font-medium">{sch ? `${sch.deadline ? daysUntil(sch.deadline) : "?"} days left` : ""}</div>
     </div>
   );
 }

@@ -16,20 +16,26 @@ export default function DashboardPage() {
   useEffect(() => setMounted(true), []);
 
   const matches = useMemo(() => (profile ? matchAll(profile, scholarships) : []), [profile]);
-  const qualified = matches.filter((m) => m.match.score >= 50);
-  const totalFunding = qualified.reduce((sum, m) => sum + m.amount, 0);
+  const qualified = matches.filter((m) => m.match.score >= 50 && m.status !== "CLOSED_DISCONTINUED");
+  const totalFunding = qualified.reduce((sum, m) => sum + (m.amount ?? 0), 0);
 
   const now = new Date();
   const weekEnd = new Date(now);
   weekEnd.setDate(weekEnd.getDate() + 7);
   const closingThisWeek = matches.filter((m) => {
-    const d = new Date(m.deadline);
+    if (m.status === "CLOSED_DISCONTINUED" || m.status === "CLOSED_REOPENS") return false;
+    const ref = m.deadline ?? m.lastKnownDeadline;
+    if (!ref) return false;
+    const d = new Date(ref);
     return d >= now && d <= weekEnd && m.match.score >= 50;
   });
 
   const upcomingDeadlines = matches
-    .filter((m) => new Date(m.deadline) >= now)
-    .sort((a, b) => new Date(a.deadline).getTime() - new Date(b.deadline).getTime())
+    .filter((m) => {
+      const ref = m.deadline ?? m.lastKnownDeadline;
+      return !!ref && new Date(ref) >= now;
+    })
+    .sort((a, b) => new Date((a.deadline ?? a.lastKnownDeadline)!).getTime() - new Date((b.deadline ?? b.lastKnownDeadline)!).getTime())
     .slice(0, 5);
 
   // Next best action
@@ -50,7 +56,7 @@ export default function DashboardPage() {
     } else if (matches.length > 0) {
       nba = {
         title: `Start ${matches[0].title}`,
-        desc: `Your best match at ${matches[0].match.score}% — ${matches[0].amount.toLocaleString()} ${matches[0].currency}`,
+        desc: `Your best match at ${matches[0].match.score}% — ${matches[0].amount != null ? matches[0].amount.toLocaleString() : "unconfirmed amount"} ${matches[0].currency}`,
         href: `/scholarships/${matches[0].id}`,
       };
     }
@@ -105,7 +111,7 @@ export default function DashboardPage() {
         <div className="rounded-2xl border border-border bg-card p-6">
           <div className="flex items-center gap-2 text-muted-foreground text-sm"><Trophy className="h-4 w-4" /> Total potential funding you qualify for</div>
           <div className="mt-2 font-serif text-4xl font-bold text-primary">{totalFunding.toLocaleString()}</div>
-          <div className="text-sm text-muted-foreground mt-1">Across {qualified.length} matching scholarships</div>
+          <div className="text-sm text-muted-foreground mt-1">Across {qualified.length} matching scholarships{qualified.filter((m) => m.amount == null).length ? ` (plus ${qualified.filter((m) => m.amount == null).length} with unconfirmed amounts)` : ""}</div>
         </div>
         <div className="rounded-2xl border border-border bg-card p-6">
           <div className="flex items-center gap-2 text-muted-foreground text-sm"><Calendar className="h-4 w-4" /> Closing this week</div>
@@ -135,7 +141,7 @@ export default function DashboardPage() {
                 <div className="font-medium">{m.title}</div>
                 <div className="text-sm text-muted-foreground">{m.provider}</div>
               </div>
-              <div className="text-sm font-semibold text-warning">{new Date(m.deadline).toLocaleDateString()}</div>
+              <div className="text-sm font-semibold text-warning">{new Date(m.deadline ?? m.lastKnownDeadline!).toLocaleDateString()}</div>
             </Link>
           ))}
         </div>

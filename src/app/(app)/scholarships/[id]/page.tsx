@@ -7,6 +7,7 @@ import { useProfileStore } from "@/stores/profileStore";
 import { useApplicationStore, createApplication } from "@/stores/applicationStore";
 import { matchScholarship } from "@/lib/matching";
 import { Button } from "@/components/ui/button";
+import { getMissingFields, getDisplayDeadline } from "@/lib/scholarship";
 
 export default function ScholarshipDetailPage() {
   const params = useParams();
@@ -45,10 +46,12 @@ export default function ScholarshipDetailPage() {
             <h1 className="font-serif text-3xl font-bold">{sch.title}</h1>
             <p className="text-muted-foreground mt-1">{sch.provider}</p>
             <div className="mt-3 flex flex-wrap gap-2 text-xs">
-              <span className="rounded-full bg-primary/10 text-primary px-2 py-1">{sch.amount.toLocaleString()} {sch.currency}</span>
+              <span className={`rounded-full px-2 py-1 font-medium ${sch.status === "OPEN" ? "bg-success/10 text-success" : sch.status === "ROLLING" ? "bg-accent/10 text-accent" : sch.status === "OPENING_SOON" ? "bg-warning/10 text-warning" : "bg-muted text-muted-foreground"}`}>{(sch.status ?? "OPEN").replace(/_/g, " ")}</span>
+              {sch.isReal && <span className="rounded-full bg-primary/10 text-primary px-2 py-1">Real program. Verify details on the official site.</span>}
+              {sch.confidence && <span className="rounded-full bg-muted px-2 py-1" title="Confidence level">Confidence: {sch.confidence}</span>}
+              {sch.amount != null && <span className="rounded-full bg-primary/10 text-primary px-2 py-1">{sch.amount.toLocaleString()} {sch.currency}</span>}
               <span className="rounded-full bg-muted px-2 py-1">{sch.country}</span>
-              <span className="rounded-full bg-muted px-2 py-1">{sch.type.replace("_", " ")}</span>
-              <span className="rounded-full bg-muted px-2 py-1">Deadline: {sch.deadline}</span>
+              <span className="rounded-full bg-muted px-2 py-1">Deadline: {getDisplayDeadline(sch, new Date())}</span>
             </div>
           </div>
           {match && (
@@ -127,7 +130,7 @@ export default function ScholarshipDetailPage() {
         <div className="rounded-2xl border border-border bg-card p-6">
           <h2 className="font-serif text-xl font-bold mb-3">Award details</h2>
           <div className="text-sm space-y-1">
-            <div><span className="text-muted-foreground">Amount:</span> {sch.amount.toLocaleString()} {sch.currency}</div>
+            <div><span className="text-muted-foreground">Amount:</span> {sch.amount != null ? `${sch.amount.toLocaleString()} ${sch.currency}` : "Unconfirmed"}</div>
             <div><span className="text-muted-foreground">Type:</span> {sch.type.replace("_", " ")}</div>
           </div>
         </div>
@@ -139,12 +142,24 @@ export default function ScholarshipDetailPage() {
         <ul className="space-y-2 text-sm">
           {sch.tips.map((t, i) => <li key={i}>• {t}</li>)}
         </ul>
-        <a href={sch.officialUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-primary text-sm mt-3">
-          Official link <ExternalLink className="h-3 w-3" />
-        </a>
+        {sch.officialUrl ? (
+          <a href={sch.officialUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-primary text-sm mt-3">
+            Open official site <ExternalLink className="h-3 w-3" />
+          </a>
+        ) : (
+          <p className="text-sm text-muted-foreground mt-3">Search for the official page</p>
+        )}
       </div>
 
-      {/* Trust panel */}
+      {/* Notes for unverified / conflict / low confidence */}
+      <div className="space-y-2">
+        {sch.hasConflict && <div className="rounded-xl bg-warning/10 border border-warning/30 p-3 text-sm text-warning">Sources disagree on some details. Check the official site.</div>}
+        {sch.confidence === "LOW" && <div className="rounded-xl bg-muted p-3 text-sm text-muted-foreground">Limited sources. Please verify.</div>}
+        {getMissingFields(sch).length > 0 && <div className="rounded-xl bg-muted/50 p-3 text-sm text-muted-foreground">Some details aren't confirmed yet. Check the official site.</div>}
+        {(sch.status === "CLOSED_REOPENS" || sch.status === "CLOSED_DISCONTINUED") && (
+          <Button variant="outline" onClick={() => { const r = sch.opensMonth ?? 6; alert(`Reminder set for ${r} (7 days before estimated reopening).`); }}>Remind me when it reopens</Button>
+        )}
+      </div>
       <div className="rounded-2xl border border-success/30 bg-success/5 p-6">
         <div className="flex items-center gap-2 font-semibold text-success"><ShieldCheck className="h-5 w-5" /> Trust & safety</div>
         <p className="text-sm mt-2">Source: <span className="font-medium">{sch.source === "sample" ? "Sample data for demonstration" : "Verified"}</span></p>

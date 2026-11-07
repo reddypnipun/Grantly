@@ -49,7 +49,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     .filter(Boolean)
     .map((s) => s!)
     .map((s) => {
-      const days = Math.ceil((new Date(s.deadline).getTime() - now) / 86400000);
+      const days = Math.ceil((new Date(s.deadline ?? s.lastKnownDeadline ?? Date.now()).getTime() - now) / 86400000);
       return { s, days };
     })
     .filter((n) => [1, 3, 7].includes(n.days) || (n.days > 0 && n.days <= 7));
